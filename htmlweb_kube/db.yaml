@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-deployment
+  namespace: serv-ns
+  labels:
+    app: db                 # Label assigned to the Deployment resource itself
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db              # Selector matches Pods with label 'app: db'
+  template:
+    metadata:
+      labels:
+        app: db            # Label assigned to Pods created by this Deployment
+    spec:
+      containers:
+      - name: db
+        image: public.ecr.aws/e4f9i3i0/html:v2
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+          - name: my-persistent-volume
+            mountPath: /data    # Specify the path where you want to mount the volume inside the container
+      volumes:
+      - name: my-persistent-volume
+        persistentVolumeClaim:
+          claimName: webpvc   # Name of the PVC that binds to the PV
+  
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+  namespace: serv-ns
+spec:
+  selector:
+    app: db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
