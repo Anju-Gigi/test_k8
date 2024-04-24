@@ -6,10 +6,10 @@
 
 <?php
 
-$servername = "db"; // Your MySQL server name
-$username_db = "root"; // Your MySQL username
-$password_db = "123"; // Your MySQL password
-$dbname = "db"; // Your MySQL database name
+$servername = getenv("SERVERNAME"); // Your MySQL server name
+$username_db = getenv("USERNAME"); // Your MySQL username
+$password_db = getenv("PASSDB"); // Your MySQL password
+$dbname = getenv('DB_NAME'); // Your MySQL database name
 
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);

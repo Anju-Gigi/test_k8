@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: db-deployment
-  namespace: serv-ns
+  namespace: se-ns
   labels:
     app: db                 # Label assigned to the Deployment resource itself
 spec:
@@ -17,16 +17,16 @@ spec:
     spec:
       containers:
       - name: db
-        image: public.ecr.aws/e4f9i3i0/html:v2
+        image: public.ecr.aws/e4f9i3i0/html:v1
         ports:
         - containerPort: 3306
         volumeMounts:
           - name: my-persistent-volume
-            mountPath: /data    # Specify the path where you want to mount the volume inside the container
+            mountPath: /var/lib/mysql/    # Specify the path where you want to mount the volume inside the container
       volumes:
       - name: my-persistent-volume
         persistentVolumeClaim:
-          claimName: webpvc   # Name of the PVC that binds to the PV
+          claimName: newpvc   # Name of the PVC that binds to the PV
   
 ---
 
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: db-service
-  namespace: serv-ns
+  namespace: se-ns
 spec:
   selector:
     app: db
